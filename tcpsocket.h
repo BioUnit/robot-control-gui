@@ -13,6 +13,7 @@ class TcpSocket : public QObject
 public:
     explicit TcpSocket(QObject *parent = nullptr);
     void doConnect();
+    void write(const char *data);
 
 signals:
 

@@ -14,7 +14,7 @@ void TcpSocket::doConnect(){
 
     qDebug() << "connecting...";
 
-    socket->connectToHost("google.com", 80);
+    socket->connectToHost("192.168.100.9", 1000);
 
     if(!socket->waitForConnected(5000))
     {
@@ -26,8 +26,12 @@ void TcpSocket::connected()
 {
     qDebug() << "connected...";
 
-    // Hey server, tell me about you.
-    socket->write("HEAD / HTTP/1.0\r\n\r\n\r\n\r\n");
+    socket->write("Ready");
+}
+
+void TcpSocket::write(const char *data)
+{
+    socket->write(data);
 }
 
 void TcpSocket::disconnected()

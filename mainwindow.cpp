@@ -1,20 +1,102 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
+#include "tcpsocket.h"
 #include <QDebug>
 #include <QThread>
-#include "tcpsocket.h"
-
-TcpSocket s;
+#include <QCamera>
+#include <QAudioDevice>
+#include <QPermission>
+#include <QAction>
+#include <QMediaRecorder>
+#include <QVideoWidget>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) , ui(new Ui::MainWindow)
 {
-    s.doConnect();
+    actionStartCamera = new QAction(parent);
+    actionStartCamera->setObjectName("actionStartCamera");
+    actionStopCamera = new QAction(parent);
+    actionStopCamera->setObjectName("actionStopCamera");
+    //s.doConnect();
     ui->setupUi(this);
+    init();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::init() {
+#if QT_CONFIG(permissions)
+    // camera
+    QCameraPermission cameraPermission;
+    switch (qApp->checkPermission(cameraPermission)) {
+    case Qt::PermissionStatus::Undetermined:
+        qApp->requestPermission(cameraPermission, this, &MainWindow::init);
+        return;
+    case Qt::PermissionStatus::Denied:
+        qWarning("Camera permission is not granted!");
+        return;
+    case Qt::PermissionStatus::Granted:
+        break;
+    }
+    // microphone
+    QMicrophonePermission microphonePermission;
+    switch (qApp->checkPermission(microphonePermission)) {
+    case Qt::PermissionStatus::Undetermined:
+        qApp->requestPermission(microphonePermission, this, &MainWindow::init);
+        return;
+    case Qt::PermissionStatus::Denied:
+        qWarning("Microphone permission is not granted!");
+        return;
+    case Qt::PermissionStatus::Granted:
+        break;
+    }
+#endif
+
+    m_audioInput.reset(new QAudioInput);
+    m_captureSession.setAudioInput(m_audioInput.get());
+
+    // Camera devices:
+
+    videoDevicesGroup = new QActionGroup(this);
+    videoDevicesGroup->setExclusive(true);
+    updateCameras();
+
+    setCamera(QMediaDevices::defaultVideoInput());
+}
+
+void MainWindow::updateCameras(){
+    ui->menuDevices->clear();
+    const QList<QCameraDevice> availableCameras = QMediaDevices::videoInputs();
+    for (const QCameraDevice &cameraDevice : availableCameras) {
+        QAction *videoDeviceAction = new QAction(cameraDevice.description(), videoDevicesGroup);
+        videoDeviceAction->setCheckable(true);
+        videoDeviceAction->setData(QVariant::fromValue(cameraDevice));
+        if (cameraDevice == QMediaDevices::defaultVideoInput())
+            videoDeviceAction->setChecked(true);
+
+        ui->menuDevices->addAction(videoDeviceAction);
+    }
+}
+
+void MainWindow::setCamera(const QCameraDevice &cameraDevice){
+    m_camera.reset(new QCamera(cameraDevice));
+    m_captureSession.setCamera(m_camera.data());
+
+    m_captureSession.setVideoOutput(ui->widget);
+
+    m_camera->start();
+}
+
+void MainWindow::startCamera()
+{
+    m_camera->start();
+}
+
+void MainWindow::stopCamera()
+{
+    m_camera->stop();
 }
 
 void MainWindow::on_LeftButton_pressed()

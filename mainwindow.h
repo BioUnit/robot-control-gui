@@ -2,6 +2,12 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QAudioInput>
+#include <QMediaCaptureSession>
+#include <QActionGroup>
+#include <QMediaDevices>
+#include <QCameraDevice>
+#include "tcpsocket.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -12,10 +18,18 @@ QT_END_NAMESPACE
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
+    TcpSocket s;
 
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+    void init();
+    void updateCameras();
+    void setCamera(const QCameraDevice &cameraDevice);
+    void updateCameraActive(bool active);
+    void startCamera();
+    void stopCamera();
 
 private slots:
     void on_LeftButton_pressed();
@@ -36,5 +50,13 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    QScopedPointer<QAudioInput> m_audioInput;
+    QMediaCaptureSession m_captureSession;
+    QActionGroup *videoDevicesGroup = nullptr;
+    QMediaDevices m_devices;
+    QScopedPointer<QCamera> m_camera;
+    QAction *actionStartCamera;
+    QAction *actionStopCamera;
+    QScopedPointer<QMediaRecorder> m_mediaRecorder;
 };
 #endif // MAINWINDOW_H

@@ -1,2 +1,2 @@
 # robot-control-gui
-This is a Qt gui control app to control movements and receive video stream from robot-server
+This is a Qt gui control app for movement control and video streaming from "robot-server" and "robot-server-c" programs

@@ -24,7 +24,7 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    void init();
+    void camera_init();
     void updateCameras();
     void setCamera(const QCameraDevice &cameraDevice);
     void updateCameraActive(bool active);

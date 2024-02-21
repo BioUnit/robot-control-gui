@@ -12,13 +12,9 @@
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) , ui(new Ui::MainWindow)
 {
-    actionStartCamera = new QAction(parent);
-    actionStartCamera->setObjectName("actionStartCamera");
-    actionStopCamera = new QAction(parent);
-    actionStopCamera->setObjectName("actionStopCamera");
-    //s.doConnect();
+    s.doConnect();
     ui->setupUi(this);
-    init();
+    camera_init();
 }
 
 MainWindow::~MainWindow()
@@ -26,13 +22,13 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::init() {
+void MainWindow::camera_init() {
 #if QT_CONFIG(permissions)
     // camera
     QCameraPermission cameraPermission;
     switch (qApp->checkPermission(cameraPermission)) {
     case Qt::PermissionStatus::Undetermined:
-        qApp->requestPermission(cameraPermission, this, &MainWindow::init);
+        qApp->requestPermission(cameraPermission, this, &MainWindow::camera_init);
         return;
     case Qt::PermissionStatus::Denied:
         qWarning("Camera permission is not granted!");
@@ -44,7 +40,7 @@ void MainWindow::init() {
     QMicrophonePermission microphonePermission;
     switch (qApp->checkPermission(microphonePermission)) {
     case Qt::PermissionStatus::Undetermined:
-        qApp->requestPermission(microphonePermission, this, &MainWindow::init);
+        qApp->requestPermission(microphonePermission, this, &MainWindow::camera_init);
         return;
     case Qt::PermissionStatus::Denied:
         qWarning("Microphone permission is not granted!");

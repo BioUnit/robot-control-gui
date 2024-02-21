@@ -14,7 +14,7 @@ void TcpSocket::doConnect(){
 
     qDebug() << "connecting...";
 
-    socket->connectToHost("192.168.100.9", 1000);
+    socket->connectToHost("192.168.0.107", 1000);
 
     if(!socket->waitForConnected(5000))
     {

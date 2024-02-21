@@ -14,7 +14,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) , ui(new Ui::MainW
 {
     s.doConnect();
     ui->setupUi(this);
-    camera_init();
+    //camera_init();
 }
 
 MainWindow::~MainWindow()

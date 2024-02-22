@@ -28,6 +28,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
         tcpsocket.h tcpsocket.cpp
+        mycamera.h mycamera.cpp
 
     )
 # Define target properties for Android with Qt 6 as:

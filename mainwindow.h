@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "tcpsocket.h"
 #include "mycamera.h"
+#include <QMediaPlayer>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -17,28 +18,25 @@ class MainWindow : public QMainWindow
     TcpSocket my_socket;
     MyCamera my_camera;
 
+
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     void updateCameras();
     void setCamera();
-
+    void initSignals();
+    QMediaPlayer *player;
 private slots:
-    void on_LeftButton_pressed();
-
-    void on_RightButton_pressed();
-
-    void on_BackwardButton_pressed();
-
-    void on_ForwardButton_pressed();
-
-    void on_ForwardButton_released();
-
-    void on_BackwardButton_released();
-
-    void on_LeftButton_released();
-
-    void on_RightButton_released();
+    void LeftButton_pressed();
+    void RightButton_pressed();
+    void BackwardButton_pressed();
+    void ForwardButton_pressed();
+    void ForwardButton_released();
+    void BackwardButton_released();
+    void LeftButton_released();
+    void RightButton_released();
+    void TcpConnButton_clicked();
+    void KeyboardSwitchButton_clicked();
 
 private:
     Ui::MainWindow *ui;

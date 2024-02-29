@@ -9,11 +9,13 @@
 class TcpSocket : public QObject
 {
     Q_OBJECT
-    QTcpSocket *socket;
+    QTcpSocket *socket = NULL;
 public:
     explicit TcpSocket(QObject *parent = nullptr);
-    void doConnect();
+    bool TcpConnect();
+    void TcpDisconnect();
     void write(const char *data);
+    bool isConnected();
 
 signals:
 

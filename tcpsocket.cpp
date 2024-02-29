@@ -4,7 +4,7 @@ TcpSocket::TcpSocket(QObject *parent)
     : QObject{parent}
 {}
 
-void TcpSocket::doConnect(){
+bool TcpSocket::TcpConnect(){
     socket = new QTcpSocket(this);
 
     connect(socket, SIGNAL(connected()), this, SLOT(connected()));
@@ -19,7 +19,15 @@ void TcpSocket::doConnect(){
     if(!socket->waitForConnected(5000))
     {
         qDebug() << "Error: " << socket->errorString();
+        return false;
+    } else {
+        return true;
     }
+}
+
+void TcpSocket::TcpDisconnect(){
+    socket->disconnectFromHost();
+    qDebug("Disconnected");
 }
 
 void TcpSocket::connected()
@@ -31,7 +39,11 @@ void TcpSocket::connected()
 
 void TcpSocket::write(const char *data)
 {
-    socket->write(data);
+    if(socket->state() == QAbstractSocket::SocketState::UnconnectedState){
+         qDebug() << "Error: Write operation suppressed - no connection";
+    } else {
+        socket->write(data);
+    }
 }
 
 void TcpSocket::disconnected()
@@ -50,4 +62,17 @@ void TcpSocket::readyRead()
 
     // read the data from the socket
     qDebug() << socket->readAll();
+}
+
+bool TcpSocket::isConnected(){
+    //qDebug() << "Error: " << socket->state();
+    if(socket == NULL){
+        return false;
+    } else {
+        if(socket->state() == QAbstractSocket::SocketState::ConnectedState){
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

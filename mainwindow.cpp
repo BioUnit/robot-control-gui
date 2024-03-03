@@ -8,13 +8,14 @@
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) , ui(new Ui::MainWindow)
 {
+    player = new QMediaPlayer(this);
     ui->setupUi(this);
     initSignals();
 
-    /* camera stream input */
-    player = new QMediaPlayer(this);
+    /* camera stream */
     player->setVideoOutput(ui->widget);
     player->setSource(QUrl("udp://192.168.0.107:5000"));
+    QThread::sleep(std::chrono::milliseconds{5000});
 
     /* PC camera */
     //my_camera.camera_init();
@@ -120,13 +121,17 @@ void MainWindow::TcpConnButton_clicked()
 {
     if(my_socket.isConnected() == true){
         my_socket.TcpDisconnect();
+        disconnect(player, SIGNAL(errorChanged()), this, SLOT(MediaErrorReceived()));
         player->stop();
         ui->TcpConnButton->setText("Connect");
     } else {
         if(my_socket.TcpConnect() == true){
-            player->play();
+            connect(player, SIGNAL(errorChanged()), this, SLOT(MediaErrorReceived()));
+            qDebug() << "Log: TCP connection established";
             ui->TcpConnButton->setText("Disconnect");
+            player->play();
         } else {
+            disconnect(player, SIGNAL(errorChanged()), this, SLOT(MediaErrorReceived()));
             player->stop();
             ui->TcpConnButton->setText("Error/Reconnect");
         }
@@ -137,4 +142,13 @@ void MainWindow::TcpConnButton_clicked()
 void MainWindow::KeyboardSwitchButton_clicked()
 {
 
+}
+
+/* Recconects video stream if any errors occur */
+void MainWindow::MediaErrorReceived(){
+    qDebug() << "Error: No input video stream found";
+    player->stop();
+    player->setSource(QUrl(NULL));
+    player->setSource(QUrl("udp://192.168.0.107:5000"));
+    player->play();
 }

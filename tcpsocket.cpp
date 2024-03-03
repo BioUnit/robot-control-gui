@@ -39,10 +39,14 @@ void TcpSocket::connected()
 
 void TcpSocket::write(const char *data)
 {
-    if(socket->state() == QAbstractSocket::SocketState::UnconnectedState){
-         qDebug() << "Error: Write operation suppressed - no connection";
+    if(socket == NULL){
+        qDebug() << "Error: Socket wasn't created";
     } else {
-        socket->write(data);
+        if(socket->state() == QAbstractSocket::SocketState::UnconnectedState){
+            qDebug() << "Error: Write operation suppressed - no connection";
+        } else {
+            socket->write(data);
+        }
     }
 }
 

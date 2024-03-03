@@ -37,6 +37,7 @@ private slots:
     void RightButton_released();
     void TcpConnButton_clicked();
     void KeyboardSwitchButton_clicked();
+    void MediaErrorReceived();
 
 private:
     Ui::MainWindow *ui;

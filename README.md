@@ -12,6 +12,8 @@ This is a Qt gui control app for movement control and video streaming from "robo
 - Multimedia component
 
 # Youtube tutorial commits bindings
-To be able to see exact source code please use : git checkout COMMIT_NUMBER_YOU_NEED
+To be able to see exact source code please use : 
+- git checkout COMMIT_NUMBER_YOU_NEED
+
 Youtube tutorials bindings:
-- How to use GPIO in C and C++ applications on Banana Pi (Armbian) : aa42489ac45cbe54f076e5e78766c7dbd332699b
+- How to use GPIO in C and C++ applications on Banana Pi (Armbian) -> git checkout aa42489ac45cbe54f076e5e78766c7dbd332699b

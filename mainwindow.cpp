@@ -61,64 +61,55 @@ void MainWindow::setCamera(){
     my_camera.m_camera->start();
 }
 
-void MainWindow::LeftButton_pressed()
-{
+void MainWindow::LeftButton_pressed() {
     qDebug("Turn Left Pressed");
     my_socket.write("LP");
     QThread::sleep(std::chrono::milliseconds{100});
 }
 
-void MainWindow::RightButton_pressed()
-{
+void MainWindow::RightButton_pressed() {
     qDebug("Turn Right Pressed");
     my_socket.write("RP");
     QThread::sleep(std::chrono::milliseconds{100});
 }
 
-void MainWindow::BackwardButton_pressed()
-{
+void MainWindow::BackwardButton_pressed() {
     qDebug("Move Backward Pressed");
     my_socket.write("BP");
     QThread::sleep(std::chrono::milliseconds{100});
 }
 
-void MainWindow::ForwardButton_pressed()
-{
+void MainWindow::ForwardButton_pressed() {
     qDebug("Move Forward Pressed");
     my_socket.write("FP");
     QThread::sleep(std::chrono::milliseconds{100});
 }
 
-void MainWindow::ForwardButton_released()
-{
+void MainWindow::ForwardButton_released() {
     qDebug("Move Forward Released");
     my_socket.write("RR");
     QThread::sleep(std::chrono::milliseconds{100});
 }
 
-void MainWindow::BackwardButton_released()
-{
+void MainWindow::BackwardButton_released() {
     qDebug("Move Backward Released");
     my_socket.write("RR");
     QThread::sleep(std::chrono::milliseconds{100});
 }
 
-void MainWindow::LeftButton_released()
-{
+void MainWindow::LeftButton_released() {
     qDebug("Turn Left Released");
     my_socket.write("RR");
     QThread::sleep(std::chrono::milliseconds{100});
 }
 
-void MainWindow::RightButton_released()
-{
+void MainWindow::RightButton_released() {
     qDebug("Turn Right Released");
     my_socket.write("RR");
     QThread::sleep(std::chrono::milliseconds{100});
 }
 
-void MainWindow::TcpConnButton_clicked()
-{
+void MainWindow::TcpConnButton_clicked() {
     if(my_socket.isConnected() == true){
         my_socket.TcpDisconnect();
         disconnect(player, SIGNAL(errorChanged()), this, SLOT(MediaErrorReceived()));
@@ -126,6 +117,8 @@ void MainWindow::TcpConnButton_clicked()
         ui->TcpConnButton->setText("Connect");
     } else {
         if(my_socket.TcpConnect() == true){
+            player->setSource(QUrl(NULL));
+            player->setSource(QUrl("udp://192.168.0.107:5000"));
             connect(player, SIGNAL(errorChanged()), this, SLOT(MediaErrorReceived()));
             qDebug() << "Log: TCP connection established";
             ui->TcpConnButton->setText("Disconnect");
@@ -139,13 +132,12 @@ void MainWindow::TcpConnButton_clicked()
     QThread::sleep(std::chrono::milliseconds{100});
 }
 
-void MainWindow::KeyboardSwitchButton_clicked()
-{
+void MainWindow::KeyboardSwitchButton_clicked() {
 
 }
 
 /* Recconects video stream if any errors occur */
-void MainWindow::MediaErrorReceived(){
+void MainWindow::MediaErrorReceived() {
     qDebug() << "Error: No input video stream found";
     player->stop();
     player->setSource(QUrl(NULL));

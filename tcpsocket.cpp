@@ -16,8 +16,7 @@ bool TcpSocket::TcpConnect(){
 
     socket->connectToHost("192.168.0.107", 1000);
 
-    if(!socket->waitForConnected(5000))
-    {
+    if(!socket->waitForConnected(5000)) {
         qDebug() << "Error: " << socket->errorString();
         return false;
     } else {
@@ -25,20 +24,17 @@ bool TcpSocket::TcpConnect(){
     }
 }
 
-void TcpSocket::TcpDisconnect(){
+void TcpSocket::TcpDisconnect() {
     socket->disconnectFromHost();
     qDebug("Disconnected");
 }
 
-void TcpSocket::connected()
-{
+void TcpSocket::connected() {
     qDebug() << "connected...";
-
     socket->write("Ready");
 }
 
-void TcpSocket::write(const char *data)
-{
+void TcpSocket::write(const char *data) {
     if(socket == NULL){
         qDebug() << "Error: Socket wasn't created";
     } else {
@@ -50,26 +46,21 @@ void TcpSocket::write(const char *data)
     }
 }
 
-void TcpSocket::disconnected()
-{
+void TcpSocket::disconnected() {
     qDebug() << "disconnected...";
 }
 
-void TcpSocket::bytesWritten(qint64 bytes)
-{
+void TcpSocket::bytesWritten(qint64 bytes) {
     qDebug() << bytes << " bytes written...";
 }
 
-void TcpSocket::readyRead()
-{
+void TcpSocket::readyRead() {
     qDebug() << "reading...";
-
     // read the data from the socket
     qDebug() << socket->readAll();
 }
 
-bool TcpSocket::isConnected(){
-    //qDebug() << "Error: " << socket->state();
+bool TcpSocket::isConnected() {
     if(socket == NULL){
         return false;
     } else {
